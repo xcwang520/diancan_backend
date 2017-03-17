@@ -4,7 +4,10 @@ var UserSQL = {
                 findUserById:'SELECT * FROM User WHERE id = ? ',
                 findUserByEmail: 'SELECT * FROM User WHERE email = ? ',
                 deleteUserById: 'DELETE FROM user where id = ?',
-                updatePassword: 'UPDATE user SET password = ? where id = ?'
+                updatePassword: 'UPDATE user SET password = ? where id = ?',
+                findUserByEmailPassword: 'SELECT * FROM User WHERE email = ? and password = ?',
+                findUserByToken: 'SELECT * FROM User WHERE token = ? ',
+                updateTokenById: 'UPDATE user set token = ? where id = ?'
               };
 
  module.exports = UserSQL;
