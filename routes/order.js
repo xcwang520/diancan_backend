@@ -3,12 +3,13 @@ var router = express.Router();
 // 导入MySQL模块
 var mysql = require('mysql');
 var dbConfig = require('../db/DBConfig');
-var dishesSQL = require('../db/dishessql');
+var orderSQL = require('../db/ordersql');
 // 使用DBConfig.js的配置信息创建一个MySQL连接池
 var pool = mysql.createPool(dbConfig.mysql);
 // 响应一个JSON数据
-var responseJSON = function(res, ret) {
+var responseJSON = function(res, ret, err) {
     if (typeof ret === 'undefined') {
+        console.log(err);
         res.json({
             code: '-200',
             msg: '操作失败'
@@ -24,7 +25,7 @@ router.post('/add', function(req, res, next) {
         // 获取前台页面传过来的参数
         var param = req.body;
         // 建立连接 增加一个用户信息
-        connection.query(dishesSQL.insert, [param.name, param.price, param.hot, param.img, new Date(), new Date()], function(err, result) {
+        connection.query(orderSQL.insert, [param.userId, param.status, param.dishesId, new Date()], function(err, result) {
             if (result) {
                 result = {
                     code: 200,
@@ -32,35 +33,20 @@ router.post('/add', function(req, res, next) {
                 };
             }
             // 以json形式，把操作结果返回给前台页面
-            responseJSON(res, result);
+            responseJSON(res, result, err);
             // 释放连接
             connection.release();
         });
     });
 });
 
-router.get('/queryList', function(req, res, next) {
-  // 从连接池获取连接
-  pool.getConnection(function(err, connection) {
-      // 获取前台页面传过来的参数
-      var param = req.query || req.params;
-      // 建立连接 增加一个用户信息
-      connection.query(dishesSQL.queryList, [param.status || 0], function(err, result) {
-          // 以json形式，把操作结果返回给前台页面
-          responseJSON(res, result);
-          // 释放连接
-          connection.release();
-      });
-  });
-});
-
-router.post('/addTop', function(req, res, next) {
+router.post('/update', function(req, res, next) {
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数
       var param = req.body;
       // 建立连接 增加一个用户信息
-      connection.query(dishesSQL.addTop, [param.id], function(err, result) {
+      connection.query(orderSQL.update, [param.status, param.id], function(err, result) {
           if (result) {
               result = {
                   code: 200,
@@ -75,13 +61,14 @@ router.post('/addTop', function(req, res, next) {
   });
 });
 
-router.post('/addStep', function(req, res, next) {
+router.post('/deleteByUser', function(req, res, next) {
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数
       var param = req.body;
       // 建立连接 增加一个用户信息
-      connection.query(dishesSQL.addStep, [param.id], function(err, result) {
+      connection.query(orderSQL.deleteByUser, [param.userId, new Date()], function(err, result) {
+        console.log(err, result)
           if (result) {
               result = {
                   code: 200,
@@ -96,46 +83,5 @@ router.post('/addStep', function(req, res, next) {
   });
 });
 
-router.post('/addCounts', function(req, res, next) {
-  // 从连接池获取连接
-  pool.getConnection(function(err, connection) {
-      // 获取前台页面传过来的参数
-      var param = req.body;
-      // 建立连接 增加一个用户信息
-      connection.query(dishesSQL.addCounts, [param.id], function(err, result) {
-          if (result) {
-              result = {
-                  code: 200,
-                  msg: '成功'
-              };
-          }
-          // 以json形式，把操作结果返回给前台页面
-          responseJSON(res, result);
-          // 释放连接
-          connection.release();
-      });
-  });
-});
-
-router.post('/updateStatus', function(req, res, next) {
-  // 从连接池获取连接
-  pool.getConnection(function(err, connection) {
-      // 获取前台页面传过来的参数
-      var param = req.body;
-      // 建立连接 增加一个用户信息
-      connection.query(dishesSQL.updateStatus, [param.status, param.id], function(err, result) {
-          if (result) {
-              result = {
-                  code: 200,
-                  msg: '成功'
-              };
-          }
-          // 以json形式，把操作结果返回给前台页面
-          responseJSON(res, result);
-          // 释放连接
-          connection.release();
-      });
-  });
-});
 
 module.exports = router;

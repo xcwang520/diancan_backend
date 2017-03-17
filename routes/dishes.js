@@ -61,6 +61,7 @@ router.post('/addTop', function(req, res, next) {
       var param = req.body;
       // 建立连接 增加一个用户信息
       connection.query(dishesSQL.addTop, [param.id], function(err, result) {
+        console.log(err);
           if (result) {
               result = {
                   code: 200,

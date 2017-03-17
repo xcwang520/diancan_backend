@@ -12,7 +12,8 @@
     "express": "~4.14.1",
     "jade": "~1.11.0",
     "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.2",
-    "mysql": "latest"
+    "mysql": "latest",
+    "mysql-queries": "^0.2.0",
+    "serve-favicon": "~2.3.2"
   }
 }

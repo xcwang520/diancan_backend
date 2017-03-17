@@ -1,10 +1,7 @@
-var dishesSQL = {
-                insert:'INSERT INTO dishes(name, price, hot, img, created, modified) VALUES(?,?,?,?,?,?)',
-                queryList:'SELECT * FROM dishes where status = ?',
-                addTop: 'UPDATE dishes set top=top+1 where id=?',
-                addStep: 'UPDATE dishes set step=step+1 where id=?',
-                addCounts: 'UPDATE dishes set counts=counts+1 where id=?',
-                updateStatus:'update dishes set status = ? where id=?'
+var orderSQL = {
+                insert: 'INSERT INTO orders(user_id, status, dishes_id, ordertime) VALUES(?,?,?,?)',
+                deleteByUser: 'DELETE FROM orders where user_id=? and DATE(ordertime)=DATE(?)',
+                update: 'update orders set status = ? where id=?'
               };
 
- module.exports = dishesSQL;
+ module.exports = orderSQL;
