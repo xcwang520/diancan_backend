@@ -69,7 +69,7 @@ router.post('/updatePassword', function(req, res, next) {
       // 获取前台页面传过来的参数
       var param = req.body;
       // 建立连接 增加一个用户信息
-      connection.query(userSQL.updatePassword, [md5(param.password), res.session.user.id], function(err, result) {
+      connection.query(userSQL.updatePassword, [md5(param.password), req.session.user.id], function(err, result) {
           if (result) {
               result = {
                   code: 200,
@@ -94,7 +94,7 @@ router.get('/findUserInfo', function(req, res, next) {
       // 获取前台页面传过来的参数
       var param = req.query || req.params;
       // 建立连接 增加一个用户信息
-      connection.query(userSQL.findUserById, [ res.session.user.id ], function(err, result) {
+      connection.query(userSQL.findUserById, [ req.session.user.id ], function(err, result) {
           if (result && result.length) {
               result = result[0];
           }
