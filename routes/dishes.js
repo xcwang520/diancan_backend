@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var cache = require('../cache');
 // 导入MySQL模块
 var mysql = require('mysql');
 var dbConfig = require('../db/DBConfig');
@@ -19,7 +20,8 @@ var responseJSON = function(res, ret) {
 };
 
 router.post('/add', function(req, res, next) {
-    if(!+req.session.user.admin) responseJSON();
+    let user = cache.get(req.headers.token);
+    if(!+user.admin) responseJSON();
     // 从连接池获取连接
     pool.getConnection(function(err, connection) {
         // 获取前台页面传过来的参数
@@ -41,8 +43,9 @@ router.post('/add', function(req, res, next) {
 });
 
 router.get('/queryList', function(req, res, next) {
+  let user = cache.get(req.headers.token);
   var param = req.query || req.params;
-  if(param.status && !+req.session.user.admin) responseJSON();
+  if(param.status != 0 && !+user.admin) responseJSON();
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数
@@ -121,7 +124,8 @@ router.post('/addCounts', function(req, res, next) {
 });
 
 router.post('/updateStatus', function(req, res, next) {
-  if(!+req.session.user.admin) responseJSON();
+  let user = cache.get(req.headers.token);
+  if(!+user.admin) responseJSON();
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数

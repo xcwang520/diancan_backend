@@ -20,17 +20,18 @@ var responseJSON = function(res, ret, err) {
 };
 
 router.post('/add', function(req, res, next) {
+  let user = cache.get(req.headers.token);
     // 从连接池获取连接
     pool.getConnection(function(err, connection) {
         // 获取前台页面传过来的参数
         var param = req.body;
         var date1 = new Date();
-         date1.setHours(17);
+         date1.setHours(23);
          date1.setMinutes(0);
         var date2 = new Date();
         var status = date2<date1?0:1;
         // 建立连接 增加一个用户信息
-        connection.query(orderSQL.insert, [req.session.user.id, status, param.dishesId, date2], function(err, result) {
+        connection.query(orderSQL.insert, [user.id, status, param.dishesId, date2], function(err, result) {
             if (result) {
                 result = {
                     code: 200,
@@ -46,7 +47,8 @@ router.post('/add', function(req, res, next) {
 });
 
 router.post('/update', function(req, res, next) {
-  if(!+req.session.user.admin) responseJSON();
+  let user = cache.get(req.headers.token);
+  if(!+user.admin) responseJSON();
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数
@@ -68,12 +70,13 @@ router.post('/update', function(req, res, next) {
 });
 
 router.post('/deleteByUser', function(req, res, next) {
+  let user = cache.get(req.headers.token);
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数
       var param = req.body;
       // 建立连接 增加一个用户信息
-      connection.query(orderSQL.deleteByUser, [req.session.user.id, new Date()], function(err, result) {
+      connection.query(orderSQL.deleteByUser, [user.id, new Date()], function(err, result) {
         console.log(err, result)
           if (result) {
               result = {
@@ -90,13 +93,14 @@ router.post('/deleteByUser', function(req, res, next) {
 });
 
 router.post('/find', function(req, res, next) {
-  if(!+req.session.user.admin) responseJSON();
+  let user = cache.get(req.headers.token);
+  if(!+user.admin) responseJSON();
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数
       var param = req.body;
       // 建立连接 增加一个用户信息
-      connection.query(orderSQL.findByUserId, [req.session.user.id], function(err, result) {
+      connection.query(orderSQL.findByUserId, [user.id], function(err, result) {
           // 以json形式，把操作结果返回给前台页面
           responseJSON(res, result);
           // 释放连接

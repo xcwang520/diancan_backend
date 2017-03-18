@@ -7,7 +7,8 @@ var UserSQL = {
                 updatePassword: 'UPDATE user SET password = ? where id = ?',
                 findUserByEmailPassword: 'SELECT * FROM User WHERE email = ? and password = ?',
                 findUserByToken: 'SELECT * FROM User WHERE token = ? ',
-                updateTokenById: 'UPDATE user set token = ? where id = ?'
+                updateTokenById: 'UPDATE user set token = ? where id = ?',
+                departments: 'SELECT * FROM department'
               };
 
  module.exports = UserSQL;
