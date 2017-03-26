@@ -21,7 +21,7 @@ var responseJSON = function(res, ret) {
 
 router.post('/add', function(req, res, next) {
     let user = cache.get(req.headers.token);
-    if(!+user.admin) responseJSON();
+    if(!+user.admin) return responseJSON(res);
     // 从连接池获取连接
     pool.getConnection(function(err, connection) {
         // 获取前台页面传过来的参数
@@ -31,9 +31,11 @@ router.post('/add', function(req, res, next) {
             if (result) {
                 result = {
                     code: 200,
-                    msg: '成功'
+                    msg: '成功',
+                    id: result.insertId
                 };
             }
+
             // 以json形式，把操作结果返回给前台页面
             responseJSON(res, result);
             // 释放连接
@@ -42,10 +44,10 @@ router.post('/add', function(req, res, next) {
     });
 });
 
-router.get('/queryList', function(req, res, next) {
+router.post('/queryList', function(req, res, next) {
   let user = cache.get(req.headers.token);
-  var param = req.query || req.params;
-  if(param.status != 0 && !+user.admin) responseJSON();
+  var param = req.body;
+  if(param.status && !+user.admin) return responseJSON(res);
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数
@@ -125,7 +127,7 @@ router.post('/addCounts', function(req, res, next) {
 
 router.post('/updateStatus', function(req, res, next) {
   let user = cache.get(req.headers.token);
-  if(!+user.admin) responseJSON();
+  if(!+user.admin) return responseJSON(res);
   // 从连接池获取连接
   pool.getConnection(function(err, connection) {
       // 获取前台页面传过来的参数

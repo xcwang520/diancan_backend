@@ -41,7 +41,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/dc', express.static(__dirname + '/dist'));
 app.use(function(req, res, next) {
-    if(req.url.indexOf("/dc") == 0 || req.url=="/users/login" || req.url=="/users/regist" || req.url=="/users/reset" || req.url=="/users/departments") {
+    if(req.url.indexOf("/dc") == 0 || req.url == "/avicon.ico" || req.url=="/users/login" || req.url=="/users/regist" || req.url=="/users/reset" || req.url=="/users/departments") {
       next();
     } else {
       if (!cache.get(req.headers.token)) {
