@@ -1,7 +1,7 @@
 var cache = require('memory-cache');
 
 var put = function(key, value) {
-  return cache.put(key, value);
+  return cache.put(key, value, 1000*60*60*24*15);
 }
 
 var get = function(key) {

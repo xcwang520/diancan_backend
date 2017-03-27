@@ -25,8 +25,8 @@ router.post('/add', function(req, res, next) {
   // 获取前台页面传过来的参数
   var param = req.body;
   var date1 = new Date();
-   date1.setHours(23);
-   date1.setMinutes(0);
+   date1.setHours(17);
+   date1.setMinutes(15);
   var date2 = new Date();
   var status = date2<date1?0:1;
   if(status) return responseJSON(res);
